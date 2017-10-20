@@ -1,17 +1,32 @@
 import threading
-import location
+from field import Field
+from location import Location
+import math
 
-class Person(threading.Thread):
 
+# threading.Thread
+class Person:
     def __init__(self, field, location):
-        threading.Thread.__init__(self)
+        # threading.Thread.__init__(self)
         self.field = field
         self.location = location
 
-    def goToDoor(self):
-        while location.row != 0:
-            print()
-            #todo
+    def decideWhereToGo(self):
+        freeLocations = self.field.getFreeAdjacentLocations(self.location)
+        if freeLocations:
+            distance = []
+            for l in freeLocations:
+                distance.append(math.sqrt(l.row * l.row + l.col * l.col))
+            sortedDist = sorted(distance)
+            for i in range(len(distance)):
+                if sortedDist[0] == distance[i]:
+                    return freeLocations[i]
+        return None
 
-    def run(self):
-        self.goToDoor()
+        # def goToDoor(self):
+        # while location.row != 0:
+        #    print()
+        # todo
+
+        # def run(self):
+        # self.goToDoor()
