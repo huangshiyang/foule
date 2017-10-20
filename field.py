@@ -9,6 +9,7 @@ class Field:
                 if not (i == 0 and j == 0) and self.inBound(location.row + i, location.col + j) and \
                                 self.grid[location.row + i][location.col + j] == 1:
                     locations[len(location)] = (location.row + i, location.col + j)
+        return  locations
 
     def inBound(self, row, col):
         return ((row >= 0 and row < len(self.grid)) and (col >= 0 and col < len(self.grid[0])))
