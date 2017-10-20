@@ -18,15 +18,17 @@ class Person:
             for l in freeLocations:
                 distance.append(math.sqrt(l.row * l.row + l.col * l.col))
             sortedDist = sorted(distance)
-            for i in range(len(distance)):
-                if sortedDist[0] == distance[i]:
-                    return freeLocations[i]
+            normDist = math.sqrt(self.location.row * self.location.row + self.location.col * self.location.col)
+            if normDist > sortedDist[0]:
+                for i in range(len(distance)):
+                    if sortedDist[0] == distance[i]:
+                        return freeLocations[i]
         return None
 
-        # def goToDoor(self):
-        # while location.row != 0:
-        #    print()
-        # todo
+    def goToDoor(self):
+        location = self.decideWhereToGo()
+        self.field.clear(location)
+        self.field.place(location)
 
         # def run(self):
         # self.goToDoor()
