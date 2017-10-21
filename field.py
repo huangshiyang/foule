@@ -30,10 +30,10 @@ class Field:
                     width = self.width - 1
                     height = self.height - 1
                     if random.uniform(0, 100) < 20:
-                        while width > self.width - x - 2 or height > self.height - y - 2 or self.isCovered(x, y, height,
+                        while width > self.width - x - 1 or height > self.height - y - 1 or self.isCovered(x, y, height,
                                                                                                            width) or self.isUnder(
                             x, y, width):
-                            width = random.randint(0, min(100, self.width - x, self.underX(x, y, width)))
+                            width = random.randint(0, min(100, self.width - x , self.underX(x, y, width)))
                             height = random.randint(0, min(20, self.height - y))
                         for x2 in range(x, width + x):
                             for y2 in range(y, height + y):
