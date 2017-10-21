@@ -1,25 +1,28 @@
 import argparse
 import sys
 from person import Person
-from location import Location
 from field import Field
+import math
 
 
 def checkArg(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', metavar='0123456789', default=0, type=int,
+    parser.add_argument("-p", choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], default=0, type=int,
                         help='nombre de personnes présentent sur le terrain')
-    parser.add_argument('-t', metavar='01', default=0, type=int, help='scénario de créations des threads')
-    parser.add_argument('-m', metavar='', help='mesure du temps d’exécution')
+    parser.add_argument('-t', choices=[0, 1], default=0, type=int, help='scénario de créations des threads')
+    parser.add_argument('-m', action='store_true', help='mesure du temps d’exécution')
     results = parser.parse_args(args)
+    return results
 
 
 if __name__ == "__main__":
-    checkArg(sys.argv[1:])
+    args = checkArg(sys.argv[1:])
     field = Field(512, 128)
     field.obstruct()
-    field.print()
-    p1 = Person(field)
-    p2=Person(field)
-    p1.start()
-    p2.start()
+    # field.print()
+
+    n = pow(2, args.p)
+    if args.t == 0:
+        while (n > 0):
+            Person(field).start()
+            n = n - 1
