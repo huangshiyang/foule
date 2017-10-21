@@ -2,14 +2,21 @@ import threading
 from field import Field
 from location import Location
 import math
+import random
+import os
 
 
 # threading.Thread
 class Person:
-    def __init__(self, field, location):
+    def __init__(self, field):
         # threading.Thread.__init__(self)
         self.field = field
-        self.location = location
+        while True:
+            location = Location(random.randint(1, self.field.getHeight()), random.randint(1, self.field.getWidth()))
+            if (self.field.getLocation(location) == 0):
+                self.field.place(location)
+                self.location = location
+                break
 
     def decideWhereToGo(self):
         freeLocations = self.field.getFreeAdjacentLocations(self.location)
@@ -26,9 +33,15 @@ class Person:
         return None
 
     def goToDoor(self):
-        location = self.decideWhereToGo()
-        self.field.clear(location)
-        self.field.place(location)
+        while self.location.row > 1 or self.location.col > 1:
+            location = self.decideWhereToGo()
+            if location != None:
+                self.field.clear(self.location)
+                self.field.place(location)
+                self.location = location
 
-        # def run(self):
-        # self.goToDoor()
+            # def run(self):
+            # self.goToDoor()
+
+    def print(self):
+        self.field.print()
