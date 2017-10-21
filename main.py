@@ -16,3 +16,6 @@ def checkArg(args=None):
 
 if __name__ == "__main__":
     checkArg(sys.argv[1:])
+    field=Field(512,128)
+    field.obstruct()
+    field.print()
