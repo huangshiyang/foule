@@ -3,13 +3,11 @@ from field import Field
 from location import Location
 import math
 import random
-import os
 
 
-# threading.Thread
-class Person:
+class Person(threading.Thread):
     def __init__(self, field):
-        # threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.field = field
         while True:
             location = Location(random.randint(1, self.field.getHeight()), random.randint(1, self.field.getWidth()))
@@ -33,15 +31,19 @@ class Person:
         return None
 
     def goToDoor(self):
+        i=1
         while self.location.row > 1 or self.location.col > 1:
             location = self.decideWhereToGo()
             if location != None:
                 self.field.clear(self.location)
                 self.field.place(location)
                 self.location = location
+            i=i+1
+        print(self.getName(),"#",i)
+        self.field.clear(self.location)
 
-            # def run(self):
-            # self.goToDoor()
+    def run(self):
+        self.goToDoor()
 
     def print(self):
         self.field.print()
