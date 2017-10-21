@@ -77,9 +77,18 @@ class Field:
         for y in range(0, self.height):
             for x in range(0, self.width):
                 if (self.grid[y][x] == 1):
-                    print("o", end="")
+                    print("*", end="")
                 elif (self.grid[y][x] == 2):
                     print("■", end="")
                 else:
                     print("□", end="")
             print("")
+
+    def getWidth(self):
+        return self.width
+
+    def getHeight(self):
+        return self.height
+
+    def getLocation(self, location):
+        return self.grid[location.row][location.col]
