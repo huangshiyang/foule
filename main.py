@@ -22,11 +22,14 @@ if __name__ == "__main__":
     if args.t == 0:
         field = Field(512, 128)
         field.obstruct()
+        field.print()
+        print("")
         if args.t == 0:
             listP=[]
             while (n > 0):
                 listP.append(Person(field))
                 n = n - 1
+            field.print()
             for p in listP:
                 p.start()
     elif args.t == 1:
