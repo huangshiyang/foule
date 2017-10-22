@@ -10,7 +10,8 @@ class Person(threading.Thread):
         threading.Thread.__init__(self)
         self.field = field
         while True:
-            location = Location(random.randint(1, self.field.getHeight()), random.randint(1, self.field.getWidth()))
+            location = Location(random.randint(0, self.field.getHeight() - 1),
+                                random.randint(0, self.field.getWidth() - 1))
             if (self.field.getLocation(location) == 0):
                 self.field.place(location)
                 self.location = location
@@ -31,15 +32,15 @@ class Person(threading.Thread):
         return None
 
     def goToDoor(self):
-        i=1
-        while self.location.row > 1 or self.location.col > 1:
+        i = 1
+        while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
             location = self.decideWhereToGo()
             if location != None:
                 self.field.clear(self.location)
                 self.field.place(location)
                 self.location = location
-            i=i+1
-        print(self.getName(),"#",i)
+            i = i + 1
+        print(self.getName(), "#", i)
         self.field.clear(self.location)
 
     def run(self):
