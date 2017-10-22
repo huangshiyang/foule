@@ -1,5 +1,6 @@
 from location import Location
 import random
+import threading
 
 
 class Field:
@@ -7,6 +8,7 @@ class Field:
         self.grid = [[0 for i in range(x)] for j in range(y)]
         self.width = x;
         self.height = y;
+        self.lock=threading.Lock()
 
     def getFreeAdjacentLocations(self, location):
         locations = []
@@ -33,7 +35,7 @@ class Field:
                         while width > self.width - x - 1 or height > self.height - y - 1 or self.isCovered(x, y, height,
                                                                                                            width) or self.isUnder(
                             x, y, width):
-                            width = random.randint(0, min(100, self.width - x , self.underX(x, y, width)))
+                            width = random.randint(0, min(100, self.width - x, self.underX(x, y, width)))
                             height = random.randint(0, min(20, self.height - y))
                         for x2 in range(x, width + x):
                             for y2 in range(y, height + y):
