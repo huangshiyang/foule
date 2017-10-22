@@ -17,12 +17,14 @@ def checkArg(args=None):
 
 if __name__ == "__main__":
     args = checkArg(sys.argv[1:])
-    field = Field(512, 128)
-    field.obstruct()
-    # field.print()
 
     n = pow(2, args.p)
     if args.t == 0:
-        while (n > 0):
-            Person(field).start()
-            n = n - 1
+        field = Field(512, 128)
+        field.obstruct()
+        if args.t == 0:
+            while (n > 0):
+                Person(field).start()
+                n = n - 1
+    elif args.t == 1:
+        print("not done")
