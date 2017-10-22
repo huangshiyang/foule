@@ -3,6 +3,7 @@ from field import Field
 from location import Location
 import math
 import random
+import time
 
 
 class Person(threading.Thread):
@@ -34,13 +35,18 @@ class Person(threading.Thread):
     def goToDoor(self):
         i = 1
         while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
-            location = self.decideWhereToGo()
-            if location != None:
-                self.field.clear(self.location)
-                self.field.place(location)
-                self.location = location
-            i = i + 1
-        print(self.getName(), "#", i)
+            with self.field.lock:
+                location = self.decideWhereToGo()
+                if location != None:
+                    self.field.clear(self.location)
+                    self.field.place(location)
+                    self.location = location
+                i = i + 1
+            time.sleep(0.001)
+        with self.field.lock:
+            print(self.getName(), "#", i)
+            self.field.print()
+            print("")
         self.field.clear(self.location)
 
     def run(self):
