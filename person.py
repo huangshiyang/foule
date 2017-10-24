@@ -33,19 +33,21 @@ class Person(threading.Thread):
         return None
 
     def goToDoor(self):
-        i = 1
+        i = 0
         while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
-            with self.field.lock:
-                location = self.decideWhereToGo()
-                if location != None:
-                    self.field.clear(self.location)
-                    self.field.place(location)
-                    self.location = location
-                i = i + 1
+            l = self.location
+            self.field.acquire(l)
+            location = self.decideWhereToGo()
+            if location != None:
+                self.field.clear(self.location)
+                self.field.place(location)
+                self.location = location
+            i = i + 1
+            self.field.release(l)
             time.sleep(0.001)
         with self.field.lock:
             print(self.getName(), "#", i)
-            self.field.print()
+            #self.field.print()
             print("")
         self.field.clear(self.location)
 
