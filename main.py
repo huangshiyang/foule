@@ -11,6 +11,7 @@ def checkArg(args=None):
                         help='nombre de personnes présentent sur le terrain')
     parser.add_argument('-t', choices=[0, 1], default=0, type=int, help='scénario de créations des threads')
     parser.add_argument('-m', action='store_true', help='mesure du temps d’exécution')
+    parser.add_argument('-d', action='store_true', help='display')
     results = parser.parse_args(args)
     return results
 
@@ -22,14 +23,16 @@ if __name__ == "__main__":
     if args.t == 0:
         field = Field(512, 128)
         field.obstruct()
-        field.print()
+        if args.d:
+            field.print()
         print("")
         if args.t == 0:
             listP=[]
             while (n > 0):
                 listP.append(Person(field))
                 n = n - 1
-            field.print()
+            if args.d:
+                field.print()
             for p in listP:
                 p.start()
     elif args.t == 1:
