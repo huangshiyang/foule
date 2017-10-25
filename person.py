@@ -45,8 +45,8 @@ class Person(threading.Thread):
             i = i + 1
             self.field.release(l)
             time.sleep(0.001)
-        with self.field.lock:
-            if not self.mesure:
+        if not self.mesure:
+            with self.field.lock:
                 print(self.getName(), "#", i)
                 #self.field.print()
                 print("")
