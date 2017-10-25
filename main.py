@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 if args.t == 0:
                     listP = []
                     while (n > 0):
-                        listP.append(Person(field))
+                        listP.append(Person(field, args.m))
                         n = n - 1
                     start = time.clock()
                     for p in listP:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             if args.t == 0:
                 listP = []
                 while (n > 0):
-                    listP.append(Person(field, 0))
+                    listP.append(Person(field, args.m))
                     n = n - 1
                 if args.d:
                     field.print()
