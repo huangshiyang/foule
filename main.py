@@ -29,21 +29,24 @@ if __name__ == "__main__":
         list = [0, 0, 0, 0, 0]
         sum = 0
         for index in range(len(list)):
+            print("#", index + 1, end=' ')
+            field = Field(512, 128)
+            field.obstruct()
+            if args.d:
+                field.print()
             if args.t == 0:
-                field = Field(512, 128)
-                field.obstruct()
-                if args.d:
-                    field.print()
-                if args.t == 0:
-                    listP = []
-                    while (n > 0):
-                        listP.append(Person(field, args.m))
-                        n = n - 1
-                    start = time.clock()
-                    for p in listP:
-                        p.start()
+                listP = []
+                while (n > 0):
+                    listP.append(Person(field, args.m))
+                    n = n - 1
+                start = time.clock()
+                for p in listP:
+                    p.start()
+                for p in listP:
+                    p.join()
                 end = time.clock()
                 list[index] = end - start
+                print(list[index] * 1000, "ms")
                 sum += list[index]
             elif args.t == 1:
                 start = time.clock()
@@ -52,7 +55,7 @@ if __name__ == "__main__":
                 list[index] = end - start
                 sum += list[index]
         sum -= min(list) + max(list)
-        print("average time : " + str(sum / 3))
+        print("average time :", (sum / 3) * 1000, "ms")
         print(getCPUstate())
     else:
         if args.t == 0:
