@@ -1,5 +1,4 @@
 import threading
-from field import Field
 from location import Location
 import math
 import random
@@ -47,16 +46,10 @@ class Person(threading.Thread):
             self.field.release(l)
             time.sleep(0.001)
         with self.field.lock:
-<<<<<<< HEAD
-            if self.mesure == 0:#mesure mode =1
+            if not self.mesure:
                 print(self.getName(), "#", i)
-                self.field.print()
+                #self.field.print()
                 print("")
-=======
-            print(self.getName(), "#", i)
-            #self.field.print()
-            print("")
->>>>>>> 1289f2fdbc9d67dcf9d974d10e38cb4322122d4a
         self.field.clear(self.location)
 
     def run(self):
