@@ -1,5 +1,4 @@
 import threading
-from field import Field
 from location import Location
 import math
 import random
@@ -49,7 +48,7 @@ class Person(threading.Thread):
         with self.field.lock:
             if self.display:
                 print(self.getName(), "#", i)
-                self.field.print()
+                #self.field.print()
                 print("")
         self.field.clear(self.location)
 

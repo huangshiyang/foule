@@ -2,9 +2,7 @@ import argparse
 import sys
 from person import Person
 from field import Field
-import math
 import resource
-import time
 
 
 def checkArg(args=None):
@@ -17,11 +15,11 @@ def checkArg(args=None):
     results = parser.parse_args(args)
     return results
 
+
 if __name__ == "__main__":
     args = checkArg(sys.argv[1:])
 
     n = pow(2, args.p)
-    t = args.t
     if args.m:
         print("I'm mesuring...Please be patient=)")
         list = [0, 0, 0, 0, 0]
@@ -30,7 +28,7 @@ if __name__ == "__main__":
         sumR = 0
         for index in range(len(list)):
             number = n
-            if t == 0:
+            if args.t == 0:
                 field = Field(512, 128)
                 field.obstruct()
                 print(".")
@@ -44,7 +42,7 @@ if __name__ == "__main__":
                     p.start()
                 for p in listP:
                     p.join()
-            elif t == 1:
+            elif args.t == 1:
                     print("not done")
             list[index] = resource.getrusage(resource.RUSAGE_SELF).ru_utime
             listR[index] = resource.getrusage(resource.RUSAGE_SELF).ru_stime
@@ -56,6 +54,7 @@ if __name__ == "__main__":
         print("average CPU time : " + str(sumR / 3))
         mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         print ("Memory usage is: {0} KB".format(mem))
+
     else:
         if args.t == 0:
             field = Field(512, 128)
