@@ -6,9 +6,22 @@ import threading
 class Field:
     def __init__(self, x, y):
         self.grid = [[0 for i in range(x)] for j in range(y)]
+        self.gridLock = [[threading.Lock() for i in range(x)] for j in range(y)]
         self.width = x;
         self.height = y;
-        self.lock=threading.Lock()
+        self.lock = threading.Lock()
+
+    def acquire(self, location):
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if self.inBound(location.row + i, location.col + j):
+                    self.gridLock[location.row + i][location.col + j].acquire()
+
+    def release(self, location):
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if self.inBound(location.row + i, location.col + j):
+                    self.gridLock[location.row + i][location.col + j].release()
 
     def getFreeAdjacentLocations(self, location):
         locations = []
