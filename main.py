@@ -2,8 +2,7 @@ import argparse
 import sys
 from person import Person
 from field import Field
-import psutil
-import time
+import resource
 
 
 def checkArg(args=None):
@@ -17,59 +16,59 @@ def checkArg(args=None):
     return results
 
 
-def getCPUstate(interval=1):
-    return (" CPU:" + str(psutil.cpu_percent(interval)) + "%")
-
-
 if __name__ == "__main__":
     args = checkArg(sys.argv[1:])
 
     n = pow(2, args.p)
     if args.m:
+        print("I'm mesuring...Please be patient=)")
         list = [0, 0, 0, 0, 0]
+        listR = [0, 0, 0, 0, 0]
         sum = 0
+        sumR = 0
         for index in range(len(list)):
-            print("#", index + 1, end=' ')
-            field = Field(512, 128)
-            field.obstruct()
-            if args.d:
-                field.print()
+            number = n
             if args.t == 0:
+                field = Field(512, 128)
+                field.obstruct()
+                print(".")
                 listP = []
-                while (n > 0):
-                    listP.append(Person(field, args.m))
-                    n = n - 1
-                start = time.clock()
+                while (number > 0):
+                    listP.append(Person(field, 0))
+                    number = number - 1
+                if args.d:
+                    field.print()
                 for p in listP:
                     p.start()
                 for p in listP:
                     p.join()
-                end = time.clock()
-                list[index] = end - start
-                print(list[index] * 1000, "ms")
-                sum += list[index]
             elif args.t == 1:
-                start = time.clock()
-                print("not done")
-                end = time.clock()
-                list[index] = end - start
-                sum += list[index]
+                    print("not done")
+            list[index] = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+            listR[index] = resource.getrusage(resource.RUSAGE_SELF).ru_stime
+            sum += list[index]
+            sumR += listR[index]
         sum -= min(list) + max(list)
-        print("average time :", (sum / 3) * 1000, "ms")
-        print(getCPUstate())
+        sumR -= min(listR) + max(listR)
+        print("average response time : "+ str(sum/3))
+        print("average CPU time : " + str(sumR / 3))
+        mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        print ("Memory usage is: {0} KB".format(mem))
+
     else:
         if args.t == 0:
             field = Field(512, 128)
             field.obstruct()
-            field.print()
+            if args.d:
+                field.print()
             print("")
             if args.t == 0:
                 listP = []
                 while (n > 0):
-                    listP.append(Person(field, args.m))
+                    listP.append(Person(field, args.d))
                     n = n - 1
-                if args.d:
-                    field.print()
+#                if args.d:
+ #                   field.print()
                 for p in listP:
                     p.start()
         elif args.t == 1:

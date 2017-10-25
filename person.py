@@ -6,10 +6,10 @@ import time
 
 
 class Person(threading.Thread):
-    def __init__(self, field, mesure):
+    def __init__(self, field, display):
         threading.Thread.__init__(self)
         self.field = field
-        self.mesure = mesure
+        self.display = display
         while True:
             location = Location(random.randint(0, self.field.getHeight() - 1),
                                 random.randint(0, self.field.getWidth() - 1))
@@ -45,8 +45,8 @@ class Person(threading.Thread):
             i = i + 1
             self.field.release(l)
             time.sleep(0.001)
-        if not self.mesure:
-            with self.field.lock:
+        with self.field.lock:
+            if self.display:
                 print(self.getName(), "#", i)
                 #self.field.print()
                 print("")
