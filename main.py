@@ -37,10 +37,8 @@ if __name__ == "__main__":
                 print(".")
                 personList = []
                 while (number > 0):
-                    personList.append(Person(field, args.m))
+                    personList.append(Person(field, args.m, args.d))
                     number = number - 1
-                if args.d:
-                    field.print()
                 responseTimeStart = time.time()
                 userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
                 systemTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
@@ -77,7 +75,7 @@ if __name__ == "__main__":
             if args.t == 0:
                 personList = []
                 while (n > 0):
-                    personList.append(Person(field, args.m))
+                    personList.append(Person(field, args.m, args.d))
                     n = n - 1
                 if args.d:
                     field.print()
