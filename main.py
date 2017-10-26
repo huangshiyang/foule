@@ -3,6 +3,7 @@ import sys
 from person import Person
 from field import Field
 import resource
+import time
 
 
 def checkArg(args=None):
@@ -22,11 +23,13 @@ if __name__ == "__main__":
     n = pow(2, args.p)
     if args.m:
         print("I'm mesuring...Please be patient=)")
-        cpuTimeList = [0, 0, 0, 0, 0]
+        userTimeList = [0, 0, 0, 0, 0]
+        systemTimeList = [0, 0, 0, 0, 0]
         responseTimeList = [0, 0, 0, 0, 0]
-        cpuTimeSum = 0
+        userTimeSum = 0
+        systemTimeSum = 0
         responseTimeSum = 0
-        for index in range(len(cpuTimeList)):
+        for index in range(len(userTimeList)):
             number = n
             if args.t == 0:
                 field = Field(512, 128)
@@ -38,24 +41,29 @@ if __name__ == "__main__":
                     number = number - 1
                 if args.d:
                     field.print()
-                cpuTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                responseTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
+                responseTimeStart = time.time()
+                userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                systemTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
                 for person in personList:
                     person.start()
                 for person in personList:
                     person.join()
-                cpuTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                responseTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
+                responseTimeEnd = time.time()
+                userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
             elif args.t == 1:
                 print("not done")
-            cpuTimeList[index] = cpuTimeEnd - cpuTimeStart
+            userTimeList[index] = userTimeEnd - userTimeStart
+            systemTimeList[index] = systemTimeEnd - systemTimeStart
             responseTimeList[index] = responseTimeEnd - responseTimeStart
-            cpuTimeSum += cpuTimeList[index]
+            userTimeSum += userTimeList[index]
+            systemTimeSum += systemTimeList[index]
             responseTimeSum += responseTimeList[index]
-        cpuTimeSum -= min(cpuTimeList) + max(cpuTimeList)
+        userTimeSum -= min(userTimeList) + max(userTimeList)
+        systemTimeSum -= min(systemTimeList) + max(systemTimeList)
         responseTimeSum -= min(responseTimeList) + max(responseTimeList)
         print("average response time :", responseTimeSum / 3, "second(s)")
-        print("average CPU time :", cpuTimeSum / 3, "second(s)")
+        print("average CPU time :", (userTimeSum / 3) + (systemTimeSum / 3), "second(s)")
         memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         print("Memory usage :", memory, "KB")
 
