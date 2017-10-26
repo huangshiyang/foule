@@ -22,38 +22,42 @@ if __name__ == "__main__":
     n = pow(2, args.p)
     if args.m:
         print("I'm mesuring...Please be patient=)")
-        list = [0, 0, 0, 0, 0]
-        listR = [0, 0, 0, 0, 0]
-        sum = 0
-        sumR = 0
-        for index in range(len(list)):
+        cpuTimeList = [0, 0, 0, 0, 0]
+        responseTimeList = [0, 0, 0, 0, 0]
+        cpuTimeSum = 0
+        responseTimeSum = 0
+        for index in range(len(cpuTimeList)):
             number = n
             if args.t == 0:
                 field = Field(512, 128)
                 field.obstruct()
                 print(".")
-                listP = []
+                personList = []
                 while (number > 0):
-                    listP.append(Person(field, 0))
+                    personList.append(Person(field, args.m))
                     number = number - 1
                 if args.d:
                     field.print()
-                for p in listP:
-                    p.start()
-                for p in listP:
-                    p.join()
+                cpuTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                responseTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
+                for person in personList:
+                    person.start()
+                for person in personList:
+                    person.join()
+                cpuTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                responseTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
             elif args.t == 1:
-                    print("not done")
-            list[index] = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-            listR[index] = resource.getrusage(resource.RUSAGE_SELF).ru_stime
-            sum += list[index]
-            sumR += listR[index]
-        sum -= min(list) + max(list)
-        sumR -= min(listR) + max(listR)
-        print("average response time : "+ str(sum/3))
-        print("average CPU time : " + str(sumR / 3))
-        mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        print ("Memory usage is: {0} KB".format(mem))
+                print("not done")
+            cpuTimeList[index] = cpuTimeEnd - cpuTimeStart
+            responseTimeList[index] = responseTimeEnd - responseTimeStart
+            cpuTimeSum += cpuTimeList[index]
+            responseTimeSum += responseTimeList[index]
+        cpuTimeSum -= min(cpuTimeList) + max(cpuTimeList)
+        responseTimeSum -= min(responseTimeList) + max(responseTimeList)
+        print("average response time :", responseTimeSum / 3, "second(s)")
+        print("average CPU time :", cpuTimeSum / 3, "second(s)")
+        memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        print("Memory usage :", memory, "KB")
 
     else:
         if args.t == 0:
@@ -63,13 +67,16 @@ if __name__ == "__main__":
                 field.print()
             print("")
             if args.t == 0:
-                listP = []
+                personList = []
                 while (n > 0):
-                    listP.append(Person(field, args.d))
+                    personList.append(Person(field, args.m))
                     n = n - 1
-#                if args.d:
- #                   field.print()
-                for p in listP:
-                    p.start()
+                if args.d:
+                    field.print()
+                for person in personList:
+                    person.start()
+                for person in personList:
+                    person.join()
+                print("")
         elif args.t == 1:
             print("not done")
