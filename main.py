@@ -49,8 +49,15 @@ if __name__ == "__main__":
                 responseTimeEnd = time.time()
                 userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
                 systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
-            elif args.t == 1:
+            else:  # args.t == 1
+                responseTimeStart = time.time()
+                userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                systemTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
                 print("not done")
+                responseTimeEnd = time.time()
+                userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
+                systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
+                
             userTimeList[index] = userTimeEnd - userTimeStart
             systemTimeList[index] = systemTimeEnd - systemTimeStart
             responseTimeList[index] = responseTimeEnd - responseTimeStart
