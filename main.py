@@ -62,8 +62,11 @@ if __name__ == "__main__":
         responseTimeSum -= min(responseTimeList) + max(responseTimeList)
         print("average response time :", responseTimeSum / 3, "second(s)")
         print("average CPU time :", (userTimeSum / 3) + (systemTimeSum / 3), "second(s)")
-        memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        print("Memory usage :", memory, "KB")
+        rusage_denom = 1024.
+        if sys.platform == 'darwin':
+            rusage_denom = rusage_denom * rusage_denom
+        memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / rusage_denom
+        print("Memory usage :", memory, "MB")
 
     else:
         if args.t == 0:
