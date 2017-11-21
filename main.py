@@ -1,7 +1,9 @@
 import argparse
 import sys
 from personThread import PersonThread
+from person import Person
 from field import Field
+from fieldThread import FieldThread
 import resource
 import time
 
@@ -82,17 +84,30 @@ if __name__ == "__main__":
             if args.d:
                 field.print()
             print("")
-            if args.t == 0:
-                personList = []
-                while (n > 0):
-                    personList.append(PersonThread(field, args.m, args.d))
-                    n = n - 1
-                if args.d:
-                    field.print()
-                for person in personList:
-                    person.start()
-                for person in personList:
-                    person.join()
-                print("")
+            personList = []
+            while (n > 0):
+                personList.append(PersonThread(field, args.m, args.d))
+                n = n - 1
+            if args.d:
+                field.print()
+            for person in personList:
+                person.start()
+            for person in personList:
+                person.join()
+            print("")
         elif args.t == 1:
-            print("not done")
+            # print("not done")
+            field = Field(10, 10)
+            field.obstruct()
+            while (n > 0):
+                Person(field)
+                n = n - 1
+            fieldList = []
+            fieldList.append(FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2)))
+            fieldList.append(FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2)))
+            fieldList.append(FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height))
+            fieldList.append(FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height))
+            for fieldThread in fieldList:
+                fieldThread.start()
+            for fieldThread in fieldList:
+                fieldThread.join()
