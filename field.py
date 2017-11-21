@@ -1,4 +1,5 @@
 from location import Location
+from person import Person
 import random
 import threading
 
@@ -6,6 +7,7 @@ import threading
 class Field:
     def __init__(self, x, y):
         self.grid = [[0 for i in range(x)] for j in range(y)]
+        self.gridPerson = [[None for i in range(x)] for j in range(y)]
         self.gridLock = [[threading.Lock() for i in range(x)] for j in range(y)]
         self.width = x;
         self.height = y;
@@ -29,8 +31,16 @@ class Field:
     def clear(self, location):
         self.grid[location.row][location.col] = 0
 
+    def clearPerson(self, person):
+        self.grid[person.location.row][person.location.col] = 0
+        self.gridPerson[person.location.row][person.location.col] = None
+
     def place(self, location):
         self.grid[location.row][location.col] = 1
+
+    def placePerson(self, person):
+        self.grid[person.location.row][person.location.col] = 1
+        self.gridPerson[person.location.row][person.location.col] = person
 
     def obstruct(self):
         for y in range(1, self.height - 1):
