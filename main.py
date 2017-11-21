@@ -1,6 +1,6 @@
 import argparse
 import sys
-from person import Person
+from personThread import PersonThread
 from field import Field
 import resource
 import time
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 print(".")
                 personList = []
                 while (number > 0):
-                    personList.append(Person(field, args.m, args.d))
+                    personList.append(PersonThread(field, args.m, args.d))
                     number = number - 1
                 responseTimeStart = time.time()
                 userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
@@ -57,7 +57,7 @@ if __name__ == "__main__":
                 responseTimeEnd = time.time()
                 userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
                 systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
-                
+
             userTimeList[index] = userTimeEnd - userTimeStart
             systemTimeList[index] = systemTimeEnd - systemTimeStart
             responseTimeList[index] = responseTimeEnd - responseTimeStart
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             if args.t == 0:
                 personList = []
                 while (n > 0):
-                    personList.append(Person(field, args.m, args.d))
+                    personList.append(PersonThread(field, args.m, args.d))
                     n = n - 1
                 if args.d:
                     field.print()

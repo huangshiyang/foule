@@ -5,7 +5,7 @@ import random
 import time
 
 
-class Person(threading.Thread):
+class PersonThread(threading.Thread):
     def __init__(self, field, measure, display):
         threading.Thread.__init__(self)
         self.field = field
@@ -37,14 +37,15 @@ class Person(threading.Thread):
         i = 0
         while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
             l = self.location
-            self.field.acquire(l)
             location = self.decideWhereToGo()
             if location != None:
-                self.field.clear(self.location)
-                self.field.place(location)
-                self.location = location
-            i = i + 1
-            self.field.release(l)
+                self.field.acquire(l)
+                if self.field.getLocation(location)==0:
+                    self.field.clear(self.location)
+                    self.field.place(location)
+                    self.location = location
+                i = i + 1
+                self.field.release(l)
             time.sleep(0.001)
         if not self.measure:
             with self.field.lock:
