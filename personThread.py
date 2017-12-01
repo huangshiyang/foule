@@ -40,7 +40,7 @@ class PersonThread(threading.Thread):
             location = self.decideWhereToGo()
             if location != None:
                 self.field.acquire(l)
-                if self.field.getLocation(location)==0:
+                if self.field.getLocation(location) == 0:
                     self.field.clear(self.location)
                     self.field.place(location)
                     self.location = location
@@ -55,7 +55,12 @@ class PersonThread(threading.Thread):
         self.field.clear(self.location)
 
     def run(self):
+        self.timeStart = time.clock()
         self.goToDoor()
+        self.timeEnd = time.clock()
 
     def print(self):
         self.field.print()
+
+    def getTimeComsume(self):
+        return self.timeEnd - self.timeStart

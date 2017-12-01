@@ -4,7 +4,6 @@ from personThread import PersonThread
 from person import Person
 from field import Field
 from fieldThread import FieldThread
-import resource
 import time
 
 
@@ -25,14 +24,13 @@ if __name__ == "__main__":
     n = pow(2, args.p)
     if args.m:
         print("I'm mesuring...Please be patient=)")
-        userTimeList = [0, 0, 0, 0, 0]
-        systemTimeList = [0, 0, 0, 0, 0]
+        cpuTimeList = [0, 0, 0, 0, 0]
         responseTimeList = [0, 0, 0, 0, 0]
-        userTimeSum = 0
-        systemTimeSum = 0
         responseTimeSum = 0
-        for index in range(len(userTimeList)):
+        cpuTimeSum = 0
+        for index in range(len(responseTimeList)):
             number = n
+            cpuTime = 0
             if args.t == 0:
                 field = Field(512, 128)
                 field.obstruct()
@@ -42,40 +40,25 @@ if __name__ == "__main__":
                     personList.append(PersonThread(field, args.m, args.d))
                     number = number - 1
                 responseTimeStart = time.time()
-                userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                systemTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
                 for person in personList:
                     person.start()
                 for person in personList:
                     person.join()
+                    cpuTime += person.getTimeComsume()
                 responseTimeEnd = time.time()
-                userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
             else:  # args.t == 1
                 responseTimeStart = time.time()
-                userTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                systemTimeStart = resource.getrusage(resource.RUSAGE_SELF).ru_stime
                 print("not done")
                 responseTimeEnd = time.time()
-                userTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_utime
-                systemTimeEnd = resource.getrusage(resource.RUSAGE_SELF).ru_stime
 
-            userTimeList[index] = userTimeEnd - userTimeStart
-            systemTimeList[index] = systemTimeEnd - systemTimeStart
             responseTimeList[index] = responseTimeEnd - responseTimeStart
-            userTimeSum += userTimeList[index]
-            systemTimeSum += systemTimeList[index]
+            cpuTimeList[index] = cpuTime
             responseTimeSum += responseTimeList[index]
-        userTimeSum -= min(userTimeList) + max(userTimeList)
-        systemTimeSum -= min(systemTimeList) + max(systemTimeList)
+            cpuTimeSum += cpuTimeList[index]
         responseTimeSum -= min(responseTimeList) + max(responseTimeList)
+        cpuTimeSum -= min(cpuTimeList) + max(cpuTimeList)
         print("average response time :", responseTimeSum / 3, "second(s)")
-        print("average CPU time :", (userTimeSum / 3) + (systemTimeSum / 3), "second(s)")
-        rusage_denom = 1024.
-        if sys.platform == 'darwin':
-            rusage_denom = rusage_denom * rusage_denom
-        memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / rusage_denom
-        print("Memory usage :", memory, "MB")
+        print("average CPU time :", cpuTimeSum / 3, "second(s)")
 
     else:
         if args.t == 0:
