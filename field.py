@@ -32,14 +32,14 @@ class Field:
         self.grid[location.row][location.col] = 0
 
     def clearPerson(self, person):
-        self.grid[person.location.row][person.location.col] = 0
+        self.clear(person.location)
         self.gridPerson[person.location.row][person.location.col] = None
 
     def place(self, location):
         self.grid[location.row][location.col] = 1
 
     def placePerson(self, person):
-        self.grid[person.location.row][person.location.col] = 1
+        self.place(person.location)
         self.gridPerson[person.location.row][person.location.col] = person
 
     def obstruct(self):

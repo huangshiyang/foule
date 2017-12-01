@@ -5,6 +5,7 @@ from person import Person
 from field import Field
 from fieldThread import FieldThread
 import time
+import threading
 
 
 def checkArg(args=None):
@@ -80,17 +81,26 @@ if __name__ == "__main__":
             print("")
         elif args.t == 1:
             # print("not done")
-            field = Field(10, 10)
+            field = Field(20, 20)
             field.obstruct()
             while (n > 0):
                 Person(field)
                 n = n - 1
-            fieldList = []
-            fieldList.append(FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2)))
-            fieldList.append(FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2)))
-            fieldList.append(FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height))
-            fieldList.append(FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height))
-            for fieldThread in fieldList:
-                fieldThread.start()
-            for fieldThread in fieldList:
-                fieldThread.join()
+            field.print()
+            stopEvent = threading.Event()
+            field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent)
+            field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent)
+            field3 = FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height,
+                                 stopEvent)
+            field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
+                                 stopEvent)
+            field1.start()
+            field2.start()
+            field3.start()
+            field4.start()
+
+            flag = True
+            #while flag:
+            #    flag = field1.havePerson() or field2.havePerson() or field3.havePerson() or field4.havePerson()
+            #stopEvent.set()
+            #print("done")
