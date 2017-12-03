@@ -2,6 +2,7 @@ from location import Location
 import random
 import math
 
+
 class Person:
     def __init__(self, field):
         self.field = field

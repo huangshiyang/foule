@@ -8,8 +8,8 @@ class Field:
         self.grid = [[0 for i in range(x)] for j in range(y)]
         self.gridPerson = [[None for i in range(x)] for j in range(y)]
         self.gridLock = [[threading.Lock() for i in range(x)] for j in range(y)]
-        self.width = x;
-        self.height = y;
+        self.width = x
+        self.height = y
         self.lock = threading.Lock()
 
     def acquire(self, location):
@@ -23,7 +23,7 @@ class Field:
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if not (i == 0 and j == 0) and self.inBound(location.row + i, location.col + j) and \
-                                self.grid[location.row + i][location.col + j] == 0:
+                        self.grid[location.row + i][location.col + j] == 0:
                     locations.append(Location(location.row + i, location.col + j))
         return locations
 
@@ -44,13 +44,13 @@ class Field:
     def obstruct(self):
         for y in range(1, self.height - 1):
             for x in range(1, self.width - 1):
-                if (self.grid[y][x] == 0 and not self.isUpperLeftAdjacent(x, y)):
+                if self.grid[y][x] == 0 and not self.isUpperLeftAdjacent(x, y):
                     width = self.width - 1
                     height = self.height - 1
                     if random.uniform(0, 100) < 20:
                         while width > self.width - x - 1 or height > self.height - y - 1 or self.isCovered(x, y, height,
                                                                                                            width) or self.isUnder(
-                            x, y, width):
+                                x, y, width):
                             width = random.randint(0, min(100, self.width - x, self.underX(x, y, width)))
                             height = random.randint(0, min(20, self.height - y))
                         for x2 in range(x, width + x):
@@ -58,10 +58,10 @@ class Field:
                                 self.grid[y2][x2] = 2
 
     def inBound(self, row, col):
-        return ((row >= 0 and row < self.height) and (col >= 0 and col < self.width))
+        return (0 <= row < self.height) and (0 <= col < self.width)
 
     def isUpperLeftAdjacent(self, x, y):
-        return not (self.grid[y - 1][x - 1] == 0 and self.grid[y][x - 1] == 0 and self.grid[y + 1][x - 1] == 0 and \
+        return not (self.grid[y - 1][x - 1] == 0 and self.grid[y][x - 1] == 0 and self.grid[y + 1][x - 1] == 0 and
                     self.grid[y - 1][x] == 0 and self.grid[y - 1][x + 1] == 0)
 
     def isCovered(self, x, y, height, width):
@@ -71,7 +71,7 @@ class Field:
             return True
         for i in range(y, height + y):
             for j in range(x, width + x):
-                if (self.grid[i][j] != 0):
+                if self.grid[i][j] != 0:
                     return True
         return False
 
@@ -79,7 +79,7 @@ class Field:
         if x + width > self.width - 1:
             width = self.width - x - 1
         for i in range(x + 1, width + x + 1):
-            if (self.grid[y - 1][i] != 0):
+            if self.grid[y - 1][i] != 0:
                 return True
         return False
 
@@ -87,16 +87,16 @@ class Field:
         if x + width > self.width - 1:
             width = self.width - x - 1
         for i in range(x + 1, width + x + 1):
-            if (self.grid[y - 1][i] != 0):
+            if not self.grid[y - 1][i] == 0:
                 return i
         return self.width - 1
 
     def print(self):
         for y in range(0, self.height):
             for x in range(0, self.width):
-                if (self.grid[y][x] == 1):
+                if self.grid[y][x] == 1:
                     print("×", end="")
-                elif (self.grid[y][x] == 2):
+                elif self.grid[y][x] == 2:
                     print("■", end="")
                 else:
                     print("□", end="")

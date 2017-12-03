@@ -14,7 +14,7 @@ class PersonThread(threading.Thread):
         while True:
             location = Location(random.randint(0, self.field.getHeight() - 1),
                                 random.randint(0, self.field.getWidth() - 1))
-            if (self.field.getLocation(location) == 0):
+            if self.field.getLocation(location) == 0:
                 self.field.place(location)
                 self.location = location
                 break
@@ -38,7 +38,7 @@ class PersonThread(threading.Thread):
         while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
             l = self.location
             location = self.decideWhereToGo()
-            if location != None:
+            if location is not None:
                 self.field.acquire(l)
                 if self.field.getLocation(location) == 0:
                     self.field.clear(self.location)

@@ -4,7 +4,6 @@ from personThread import PersonThread
 from person import Person
 from field import Field
 from fieldThread import FieldThread
-from location import Location
 import time
 import threading
 
@@ -38,7 +37,7 @@ if __name__ == "__main__":
                 field.obstruct()
                 print(".")
                 personList = []
-                while (number > 0):
+                while number > 0:
                     personList.append(PersonThread(field, args.m, args.d))
                     number = number - 1
                 responseTimeStart = time.time()
@@ -48,7 +47,7 @@ if __name__ == "__main__":
                     person.join()
                     cpuTime += person.getTimeComsume()
                 responseTimeEnd = time.time()
-            else:  # args.t == 1
+            elif args.t == 1:
                 responseTimeStart = time.time()
                 print("not done")
                 responseTimeEnd = time.time()
@@ -70,7 +69,7 @@ if __name__ == "__main__":
                 field.print()
             print("")
             personList = []
-            while (n > 0):
+            while n > 0:
                 personList.append(PersonThread(field, args.m, args.d))
                 n = n - 1
             if args.d:
@@ -81,10 +80,9 @@ if __name__ == "__main__":
                 person.join()
             print("")
         elif args.t == 1:
-            # print("not done")
             field = Field(10, 10)
             field.obstruct()
-            while (n > 0):
+            while n > 0:
                 Person(field)
                 n = n - 1
             field.print()
