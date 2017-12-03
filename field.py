@@ -1,5 +1,4 @@
 from location import Location
-from person import Person
 import random
 import threading
 
@@ -31,9 +30,9 @@ class Field:
     def clear(self, location):
         self.grid[location.row][location.col] = 0
 
-    def clearPerson(self, person):
-        self.clear(person.location)
-        self.gridPerson[person.location.row][person.location.col] = None
+    def clearPerson(self, location):
+        self.clear(location)
+        self.gridPerson[location.row][location.col] = None
 
     def place(self, location):
         self.grid[location.row][location.col] = 1

@@ -4,6 +4,7 @@ from personThread import PersonThread
 from person import Person
 from field import Field
 from fieldThread import FieldThread
+from location import Location
 import time
 import threading
 
@@ -81,7 +82,7 @@ if __name__ == "__main__":
             print("")
         elif args.t == 1:
             # print("not done")
-            field = Field(20, 20)
+            field = Field(10, 10)
             field.obstruct()
             while (n > 0):
                 Person(field)
@@ -100,7 +101,12 @@ if __name__ == "__main__":
             field4.start()
 
             flag = True
-            #while flag:
-            #    flag = field1.havePerson() or field2.havePerson() or field3.havePerson() or field4.havePerson()
-            #stopEvent.set()
-            #print("done")
+            while flag:
+                personSet = set()
+                for row in range(0, field.height):
+                    for col in range(0, field.height):
+                        if field.gridPerson[row][col] is not None:
+                            personSet.add(field.gridPerson[row][col])
+                flag = personSet
+            stopEvent.set()
+            print("done")
