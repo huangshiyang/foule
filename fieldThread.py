@@ -43,11 +43,11 @@ class FieldThread(threading.Thread):
                             self.field.clearPerson(tmpLocation)
                             self.field.release(location)
                 else:
-                    self.field.clearPerson(person)
+                    self.field.clearPerson(person.location)
                     self.personSet.remove(person)
-            with self.field.lock:
-                print("")
-                self.field.print()
+            #with self.field.lock:
+            #    print("")
+            #    self.field.print()
 
     def inBound(self, location):
         return location.col < self.col2 and location.col >= self.col1 and location.row < self.row2 and location.row >= self.row1
