@@ -6,6 +6,7 @@ from field import Field
 from fieldThread import FieldThread
 import time
 import threading
+from display import DisplayThread
 
 
 def checkArg(args=None):
@@ -64,28 +65,27 @@ if __name__ == "__main__":
     else:
         if args.t == 0:
             field = Field(512, 128)
-            field.obstruct()
             if args.d:
-                field.print()
+                display = DisplayThread(field)
+            field.obstruct()
             print("")
             personList = []
-            while n > 0:
+            while (n > 0):
                 personList.append(PersonThread(field, args.m, args.d))
                 n = n - 1
-            if args.d:
-                field.print()
             for person in personList:
                 person.start()
             for person in personList:
                 person.join()
             print("")
         elif args.t == 1:
-            field = Field(10, 10)
+            field = Field(512, 128)
+            if args.d:
+                display = DisplayThread(field)
             field.obstruct()
             while n > 0:
                 Person(field)
                 n = n - 1
-            field.print()
             stopEvent = threading.Event()
             field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent)
             field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent)
