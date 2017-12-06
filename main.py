@@ -46,13 +46,41 @@ if __name__ == "__main__":
                     person.start()
                 for person in personList:
                     person.join()
+                responseTimeEnd = time.time()
+                for person in personList:
                     cpuTime += person.getTimeComsume()
-                responseTimeEnd = time.time()
             elif args.t == 1:
+                field = Field(512, 128)
+                field.obstruct()
+                print(".")
+                while n > 0:
+                    Person(field)
+                    n = n - 1
+                stopEvent = threading.Event()
+                field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
+                field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent,
+                                     args.m)
+                field3 = FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height,
+                                     stopEvent, args.m)
+                field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
+                                     stopEvent, args.m)
                 responseTimeStart = time.time()
-                print("not done")
-                responseTimeEnd = time.time()
+                field1.start()
+                field2.start()
+                field3.start()
+                field4.start()
 
+                flag = True
+                while flag:
+                    personSet = set()
+                    for row in range(0, field.height):
+                        for col in range(0, field.height):
+                            if field.gridPerson[row][col] is not None:
+                                personSet.add(field.gridPerson[row][col])
+                    flag = personSet
+                stopEvent.set()
+                responseTimeEnd = time.time()
+                cpuTime = field1.getTimeComsume() + field2.getTimeComsume() + field3.getTimeComsume() + field4.getTimeComsume()
             responseTimeList[index] = responseTimeEnd - responseTimeStart
             cpuTimeList[index] = cpuTime
             responseTimeSum += responseTimeList[index]
@@ -87,12 +115,13 @@ if __name__ == "__main__":
                 Person(field)
                 n = n - 1
             stopEvent = threading.Event()
-            field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent)
-            field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent)
+            field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
+            field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent, args.m)
             field3 = FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height,
-                                 stopEvent)
+                                 stopEvent, args.m)
             field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
-                                 stopEvent)
+                                 stopEvent, args.m)
+            responseTimeStart = time.time()
             field1.start()
             field2.start()
             field3.start()
@@ -107,4 +136,5 @@ if __name__ == "__main__":
                             personSet.add(field.gridPerson[row][col])
                 flag = personSet
             stopEvent.set()
-            print("done")
+            responseTimeEnd = time.time()
+            print("done",responseTimeEnd - responseTimeStart)

@@ -11,6 +11,8 @@ class PersonThread(threading.Thread):
         self.field = field
         self.measure = measure
         self.display = display
+        self.timeStart = 0
+        self.timeEnd = 0
         while True:
             location = Location(random.randint(0, self.field.getHeight() - 1),
                                 random.randint(0, self.field.getWidth() - 1))
@@ -48,16 +50,19 @@ class PersonThread(threading.Thread):
                 self.field.release(l)
             time.sleep(0.001)
         if not self.measure:
-            with self.field.lock:
-                print(self.getName(), "#", i)
-                if self.display:
-                    self.field.print()
+            # with self.field.lock:
+            # print(self.getName(), "#", i)
+            if self.display:
+                self.field.print()
         self.field.clear(self.location)
 
     def run(self):
-        self.timeStart = time.clock()
-        self.goToDoor()
-        self.timeEnd = time.clock()
+        if self.measure:
+            self.timeStart = time.clock()
+            self.goToDoor()
+            self.timeEnd = time.clock()
+        else:
+            self.goToDoor()
 
     def print(self):
         self.field.print()

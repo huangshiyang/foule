@@ -1,8 +1,9 @@
 import threading
+import time
 
 
 class FieldThread(threading.Thread):
-    def __init__(self, field, x1, y1, x2, y2, stopEvent):
+    def __init__(self, field, x1, y1, x2, y2, stopEvent, measure):
         threading.Thread.__init__(self)
         self.stopEvent = stopEvent
         self.col1 = x1
@@ -11,8 +12,19 @@ class FieldThread(threading.Thread):
         self.row2 = y2
         self.field = field
         self.personSet = set()
+        self.measure = measure
+        self.timeStart = 0
+        self.timeEnd = 0
 
     def run(self):
+        if self.measure:
+            self.timeStart = time.clock()
+            self.goToDoor()
+            self.timeEnd = time.clock()
+        else:
+            self.goToDoor()
+
+    def goToDoor(self):
         while not self.stopEvent.is_set():
             for row in range(self.row1, self.row2):
                 for col in range(self.col1, self.col2):
@@ -47,5 +59,5 @@ class FieldThread(threading.Thread):
     def inBound(self, location):
         return self.col2 > location.col >= self.col1 and self.row2 > location.row >= self.row1
 
-    def havePerson(self):
-        return self.personSet
+    def getTimeComsume(self):
+        return self.timeEnd - self.timeStart
