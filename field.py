@@ -47,7 +47,7 @@ class Field:
                 if self.grid[y][x] == 0 and not self.isUpperLeftAdjacent(x, y):
                     width = self.width - 1
                     height = self.height - 1
-                    if random.uniform(0, 100) < 20:
+                    if random.uniform(0, 1000) < 5:
                         while width > self.width - x - 1 or height > self.height - y - 1 or self.isCovered(x, y, height,
                                                                                                            width) or self.isUnder(
                                 x, y, width):

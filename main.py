@@ -6,7 +6,8 @@ from field import Field
 from fieldThread import FieldThread
 import time
 import threading
-from display import DisplayThread
+from display import DisplayData
+from display import Display
 
 
 def checkArg(args=None):
@@ -15,7 +16,6 @@ def checkArg(args=None):
                         help='nombre de personnes présentent sur le terrain')
     parser.add_argument('-t', choices=[0, 1], default=0, type=int, help='scénario de créations des threads')
     parser.add_argument('-m', action='store_true', help='mesure du temps d’exécution')
-    parser.add_argument('-d', action='store_true', help='display')
     results = parser.parse_args(args)
     return results
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
                 print(".")
                 personList = []
                 while number > 0:
-                    personList.append(PersonThread(field, args.m, args.d))
+                    personList.append(PersonThread(field, args.m))
                     number = number - 1
                 responseTimeStart = time.time()
                 for person in personList:
@@ -98,28 +98,31 @@ if __name__ == "__main__":
 
     else:
         if args.t == 0:
+            print("running")
             field = Field(512, 128)
-            if args.d:
-                display = DisplayThread(field)
             field.obstruct()
             print("")
             personList = []
             while (n > 0):
-                personList.append(PersonThread(field, args.m, args.d))
+                personList.append(PersonThread(field, args.m))
                 n = n - 1
+            displayData = DisplayData(field)
+            displayData.start()
             for person in personList:
                 person.start()
             for person in personList:
                 person.join()
-            print("")
+            displayData.endRecord()
+            print("done")
+            display = Display(displayData)
+            display.root.mainloop()
         elif args.t == 1:
-            field = Field(10, 10)
-            if args.d:
-                display = DisplayThread(field)
+            field = Field(512, 128)
             field.obstruct()
             while n > 0:
                 Person(field)
                 n = n - 1
+
             stopEvent = threading.Event()
             field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
             field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent, args.m)
@@ -127,6 +130,8 @@ if __name__ == "__main__":
                                  stopEvent, args.m)
             field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
                                  stopEvent, args.m)
+            displayData = DisplayData(field)
+            displayData.start()
             field1.start()
             field2.start()
             field3.start()
@@ -134,15 +139,22 @@ if __name__ == "__main__":
 
             flag = True
             while flag:
-                personSet = set()
+                p = 0
                 for row in range(0, field.height):
                     for col in range(0, field.height):
                         if field.grid[row][col] is 1:
-                            continue
-                flag = False
+                            p = 1
+                            break
+                    if p is 1:
+                        break
+                if p is 0:
+                    flag = False
             stopEvent.set()
             field1.join()
             field2.join()
             field3.join()
             field4.join()
+            displayData.endRecord()
             print("done")
+            display = Display(displayData)
+            display.root.mainloop()
