@@ -1,5 +1,6 @@
 import threading
 import time
+from location import Location
 
 
 class FieldThread(threading.Thread):
@@ -23,11 +24,22 @@ class FieldThread(threading.Thread):
             self.goToDoor()
 
     def goToDoor(self):
+        for row in range(self.row1, self.row2):
+            for col in range(self.col1, self.col2):
+                if self.field.gridPerson[row][col] is not None:
+                    self.personSet.add(self.field.gridPerson[row][col])
         while not self.stopEvent.is_set():
             for row in range(self.row1, self.row2):
-                for col in range(self.col1, self.col2):
-                    if self.field.gridPerson[row][col] is not None:
-                        self.personSet.add(self.field.gridPerson[row][col])
+                if self.field.gridPerson[row][self.col1] is not None:
+                    self.personSet.add(self.field.gridPerson[row][self.col1])
+                if self.field.gridPerson[row][self.col2 - 1] is not None:
+                    self.personSet.add(self.field.gridPerson[row][self.col2 - 1])
+            for col in range(self.col1, self.col2):
+                if self.field.gridPerson[self.row1][col] is not None:
+                    self.personSet.add(self.field.gridPerson[self.row1][col])
+                if self.field.gridPerson[self.row2 - 1][col] is not None:
+                    self.personSet.add(self.field.gridPerson[self.row2 - 1][col])
+
             personList = list(self.personSet)
             for person in personList:
                 if person.location.row > 1 or person.location.col > 1 or (

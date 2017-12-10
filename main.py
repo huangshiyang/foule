@@ -111,7 +111,7 @@ if __name__ == "__main__":
                 person.join()
             print("")
         elif args.t == 1:
-            field = Field(20, 20)
+            field = Field(10, 10)
             if args.d:
                 display = DisplayThread(field)
             field.obstruct()
