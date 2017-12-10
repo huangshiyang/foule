@@ -64,6 +64,7 @@ if __name__ == "__main__":
                                      stopEvent, args.m)
                 field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
                                      stopEvent, args.m)
+
                 responseTimeStart = time.time()
                 field1.start()
                 field2.start()
@@ -84,6 +85,7 @@ if __name__ == "__main__":
                 field3.join()
                 field4.join()
                 responseTimeEnd = time.time()
+
                 cpuTime = field1.getTimeComsume() + field2.getTimeComsume() + field3.getTimeComsume() + field4.getTimeComsume()
             responseTimeList[index] = responseTimeEnd - responseTimeStart
             cpuTimeList[index] = cpuTime
@@ -135,9 +137,9 @@ if __name__ == "__main__":
                 personSet = set()
                 for row in range(0, field.height):
                     for col in range(0, field.height):
-                        if field.gridPerson[row][col] is not None:
-                            personSet.add(field.gridPerson[row][col])
-                flag = personSet
+                        if field.grid[row][col] is 1:
+                            continue
+                flag = False
             stopEvent.set()
             field1.join()
             field2.join()
