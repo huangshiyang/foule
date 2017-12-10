@@ -53,9 +53,9 @@ if __name__ == "__main__":
                 field = Field(512, 128)
                 field.obstruct()
                 print(".")
-                while n > 0:
+                while number > 0:
                     Person(field)
-                    n = n - 1
+                    number = number - 1
                 stopEvent = threading.Event()
                 field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
                 field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent,
@@ -79,6 +79,10 @@ if __name__ == "__main__":
                                 personSet.add(field.gridPerson[row][col])
                     flag = personSet
                 stopEvent.set()
+                field1.join()
+                field2.join()
+                field3.join()
+                field4.join()
                 responseTimeEnd = time.time()
                 cpuTime = field1.getTimeComsume() + field2.getTimeComsume() + field3.getTimeComsume() + field4.getTimeComsume()
             responseTimeList[index] = responseTimeEnd - responseTimeStart
@@ -107,7 +111,7 @@ if __name__ == "__main__":
                 person.join()
             print("")
         elif args.t == 1:
-            field = Field(512, 128)
+            field = Field(20, 20)
             if args.d:
                 display = DisplayThread(field)
             field.obstruct()
@@ -121,7 +125,6 @@ if __name__ == "__main__":
                                  stopEvent, args.m)
             field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
                                  stopEvent, args.m)
-            responseTimeStart = time.time()
             field1.start()
             field2.start()
             field3.start()
@@ -136,5 +139,8 @@ if __name__ == "__main__":
                             personSet.add(field.gridPerson[row][col])
                 flag = personSet
             stopEvent.set()
-            responseTimeEnd = time.time()
-            print("done",responseTimeEnd - responseTimeStart)
+            field1.join()
+            field2.join()
+            field3.join()
+            field4.join()
+            print("done")

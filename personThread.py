@@ -11,8 +11,6 @@ class PersonThread(threading.Thread):
         self.field = field
         self.measure = measure
         self.display = display
-        self.timeStart = 0
-        self.timeEnd = 0
         while True:
             location = Location(random.randint(0, self.field.getHeight() - 1),
                                 random.randint(0, self.field.getWidth() - 1))

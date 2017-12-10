@@ -13,8 +13,6 @@ class FieldThread(threading.Thread):
         self.field = field
         self.personSet = set()
         self.measure = measure
-        self.timeStart = 0
-        self.timeEnd = 0
 
     def run(self):
         if self.measure:
@@ -45,19 +43,27 @@ class FieldThread(threading.Thread):
                                 self.field.clearPerson(tmpLocation)
                                 self.personSet.remove(person)
                             self.field.release(location)
-                        else:
+                        elif self.onBound(location):
                             self.field.acquire(location)
                             tmpLocation = person.location
                             person.location = location
                             self.field.placePerson(person)
                             self.field.clearPerson(tmpLocation)
                             self.field.release(location)
+                        else:
+                            tmpLocation = person.location
+                            person.location = location
+                            self.field.placePerson(person)
+                            self.field.clearPerson(tmpLocation)
                 else:
                     self.field.clearPerson(person.location)
                     self.personSet.remove(person)
 
     def inBound(self, location):
         return self.col2 > location.col >= self.col1 and self.row2 > location.row >= self.row1
+
+    def onBound(self, location):
+        return location.row == self.row1 or location.row == self.row2 or location.col == self.col1 or location.col == self.col2
 
     def getTimeComsume(self):
         return self.timeEnd - self.timeStart

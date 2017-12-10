@@ -23,7 +23,7 @@ class Display(Frame):
     def setup(self):
         self.root.title("Foule")
         self.pack(fill=BOTH, expand=2)
-        self.canvas = Canvas(self, width=self.field.width*3+8, height=self.field.height*3+8)
+        self.canvas = Canvas(self, width=self.field.width * 3 + 8, height=self.field.height * 3 + 8)
         self.canvas.pack(fill=BOTH, side=TOP)
         self.draw()
 
