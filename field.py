@@ -10,7 +10,6 @@ class Field:
         self.gridLock = [[threading.Lock() for i in range(x)] for j in range(y)]
         self.width = x
         self.height = y
-        self.lock = threading.Lock()
 
     def acquire(self, location):
         self.gridLock[location.row][location.col].acquire()

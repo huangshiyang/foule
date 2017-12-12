@@ -1,6 +1,5 @@
 import threading
 import time
-from location import Location
 
 
 class FieldThread(threading.Thread):

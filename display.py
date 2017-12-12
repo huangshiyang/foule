@@ -1,6 +1,5 @@
 from tkinter import *
 from copy import deepcopy
-import time
 import threading
 
 
