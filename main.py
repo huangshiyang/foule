@@ -16,6 +16,7 @@ def checkArg(args=None):
                         help='nombre de personnes présentent sur le terrain')
     parser.add_argument('-t', choices=[0, 1], default=0, type=int, help='scénario de créations des threads')
     parser.add_argument('-m', action='store_true', help='mesure du temps d’exécution')
+    parser.add_argument('-d', action='store_true', help='display')
     results = parser.parse_args(args)
     return results
 
@@ -106,23 +107,26 @@ if __name__ == "__main__":
             while (n > 0):
                 personList.append(PersonThread(field, args.m))
                 n = n - 1
-            displayData = DisplayData(field)
-            displayData.start()
+            if args.d:
+                displayData = DisplayData(field)
+                displayData.start()
             for person in personList:
                 person.start()
             for person in personList:
                 person.join()
-            displayData.endRecord()
+            if args.d:
+                displayData.endRecord()
             print("done")
-            display = Display(displayData)
-            display.root.mainloop()
+            if args.d:
+                display = Display(displayData)
+                display.root.mainloop()
         elif args.t == 1:
+            print("running")
             field = Field(512, 128)
             field.obstruct()
             while n > 0:
                 Person(field)
                 n = n - 1
-
             stopEvent = threading.Event()
             field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
             field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent, args.m)
@@ -130,8 +134,9 @@ if __name__ == "__main__":
                                  stopEvent, args.m)
             field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
                                  stopEvent, args.m)
-            displayData = DisplayData(field)
-            displayData.start()
+            if args.d:
+                displayData = DisplayData(field)
+                displayData.start()
             field1.start()
             field2.start()
             field3.start()
@@ -154,7 +159,9 @@ if __name__ == "__main__":
             field2.join()
             field3.join()
             field4.join()
-            displayData.endRecord()
+            if args.d:
+                displayData.endRecord()
             print("done")
-            display = Display(displayData)
-            display.root.mainloop()
+            if args.d:
+                display = Display(displayData)
+                display.root.mainloop()
