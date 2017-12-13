@@ -34,7 +34,6 @@ class PersonThread(threading.Thread):
         return None
 
     def goToDoor(self):
-        i = 0
         while self.location.row > 1 or self.location.col > 1 or (self.location.row == 1 and self.location.col == 1):
             l = self.location
             location = self.decideWhereToGo()
@@ -44,7 +43,6 @@ class PersonThread(threading.Thread):
                     self.field.clear(self.location)
                     self.field.place(location)
                     self.location = location
-                i = i + 1
                 self.field.release(l)
             time.sleep(0.001)
         self.field.clear(self.location)
@@ -57,9 +55,6 @@ class PersonThread(threading.Thread):
             self.timeEnd = time.clock()
         else:
             self.goToDoor()
-
-    def print(self):
-        self.field.print()
 
     def getTimeComsume(self):
         return self.timeEnd - self.timeStart

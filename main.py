@@ -21,6 +21,14 @@ def checkArg(args=None):
     return results
 
 
+def stop():
+    for row in range(0, field.height):
+        for col in range(0, field.height):
+            if field.grid[row][col] is 1:
+                return False
+    return True
+
+
 if __name__ == "__main__":
     args = checkArg(sys.argv[1:])
 
@@ -162,18 +170,9 @@ if __name__ == "__main__":
             if args.d:
                 barrier.wait()
                 displayData.start()
-            flag = True
-            while flag:
-                p = 0
-                for row in range(0, field.height):
-                    for col in range(0, field.height):
-                        if field.grid[row][col] is 1:
-                            p = 1
-                            break
-                    if p is 1:
-                        break
-                if p is 0:
-                    flag = False
+            flag = False
+            while not flag:
+                flag = stop()
             stopEvent.set()
             field1.join()
             field2.join()

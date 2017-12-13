@@ -90,22 +90,5 @@ class Field:
                 return i
         return self.width - 1
 
-    def print(self):
-        for y in range(0, self.height):
-            for x in range(0, self.width):
-                if self.grid[y][x] == 1:
-                    print("×", end="")
-                elif self.grid[y][x] == 2:
-                    print("■", end="")
-                else:
-                    print("□", end="")
-            print("")
-
-    def getWidth(self):
-        return self.width
-
-    def getHeight(self):
-        return self.height
-
     def getLocation(self, location):
         return self.grid[location.row][location.col]
