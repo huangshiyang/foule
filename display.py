@@ -17,10 +17,12 @@ class Display():
         self.canvas.pack(fill=BOTH, side=TOP)
         last = Button(self.frame, text="Last", command=self.lastGrid)
         next = Button(self.frame, text="Next", command=self.nextGrid)
-        back = Button(self.frame, text="Back", command=self.back)
+        beginineg = Button(self.frame, text="Begining", command=self.begining)
+        ending = Button(self.frame, text="Ending", command=self.ending)
         last.pack(side=LEFT)
         next.pack(side=LEFT)
-        back.pack(side=LEFT)
+        beginineg.pack(side=LEFT)
+        ending.pack(side=LEFT)
         self.indexLabel = Label(self.frame, text=str(self.data.index + 1) + "/" + str(len(self.data.grid)))
         self.indexLabel.pack(side=LEFT)
         self.draw(self.data.grid[self.data.index])
@@ -41,33 +43,39 @@ class Display():
                 elif bloc == 2:
                     self.data.rects[row][col] = self.canvas.create_rectangle(x1, y1, x2, y2, fill="black")
 
-    def updateGrid(self, grid):
+    def updateGrid(self, nowIndex, targetIndex):
+        grid = self.data.grid[targetIndex]
+        nowGrid = self.data.grid[nowIndex]
         for row in range(self.data.field.height):
             for col in range(self.data.field.width):
                 bloc = grid[row][col]
-                id = self.data.rects[row][col]
-                if bloc == 0:
-                    self.canvas.itemconfig(id, fill="gray", outline="gray")
-                elif bloc == 1:
-                    self.canvas.itemconfig(id, fill="red", outline="red")
-                elif bloc == 2:
-                    self.canvas.itemconfig(id, fill="black")
+                nowBloc = nowGrid[row][col]
+                if bloc != nowBloc:
+                    id = self.data.rects[row][col]
+                    if bloc == 0:
+                        self.canvas.itemconfig(id, fill="gray", outline="gray")
+                    elif bloc == 1:
+                        self.canvas.itemconfig(id, fill="red", outline="red")
+                    elif bloc == 2:
+                        self.canvas.itemconfig(id, fill="black")
+        self.data.index = targetIndex
 
     def lastGrid(self):
         if self.data.index is not 0:
-            self.data.index = self.data.index - 1
-            self.updateGrid(self.data.grid[self.data.index])
+            self.updateGrid(self.data.index, self.data.index - 1)
             self.indexLabel.config(text=str(self.data.index + 1) + "/" + str(len(self.data.grid)))
 
     def nextGrid(self):
         if self.data.index is not len(self.data.grid) - 1:
-            self.data.index = self.data.index + 1
-            self.updateGrid(self.data.grid[self.data.index])
+            self.updateGrid(self.data.index, self.data.index + 1)
             self.indexLabel.config(text=str(self.data.index + 1) + "/" + str(len(self.data.grid)))
 
-    def back(self):
-        self.data.index = 0
-        self.updateGrid(self.data.grid[self.data.index])
+    def begining(self):
+        self.updateGrid(self.data.index, 0)
+        self.indexLabel.config(text=str(self.data.index + 1) + "/" + str(len(self.data.grid)))
+
+    def ending(self):
+        self.updateGrid(self.data.index, len(self.data.grid) - 1)
         self.indexLabel.config(text=str(self.data.index + 1) + "/" + str(len(self.data.grid)))
 
 
