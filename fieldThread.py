@@ -3,7 +3,7 @@ import time
 
 
 class FieldThread(threading.Thread):
-    def __init__(self, field, x1, y1, x2, y2, stopEvent, measure):
+    def __init__(self, field, x1, y1, x2, y2, stopEvent, measure, barrier):
         threading.Thread.__init__(self)
         self.stopEvent = stopEvent
         self.col1 = x1
@@ -13,8 +13,10 @@ class FieldThread(threading.Thread):
         self.field = field
         self.personSet = set()
         self.measure = measure
+        self.barrier = barrier
 
     def run(self):
+        self.barrier.wait()
         if self.measure:
             self.timeStart = time.clock()
             self.goToDoor()

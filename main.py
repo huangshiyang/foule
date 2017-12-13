@@ -37,10 +37,11 @@ if __name__ == "__main__":
             if args.t == 0:
                 field = Field(512, 128)
                 field.obstruct()
+                barrier = threading.Barrier(n)
                 print("#", index + 1, "run.")
                 personList = []
                 while number > 0:
-                    personList.append(PersonThread(field, args.m))
+                    personList.append(PersonThread(field, args.m, barrier))
                     number = number - 1
                 responseTimeStart = time.time()
                 for person in personList:
@@ -53,18 +54,20 @@ if __name__ == "__main__":
             elif args.t == 1:
                 field = Field(512, 128)
                 field.obstruct()
+                barrier = threading.Barrier(4)
                 print("#", index + 1, "run.")
                 while number > 0:
                     Person(field)
                     number = number - 1
                 stopEvent = threading.Event()
-                field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
+                field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m,
+                                     barrier)
                 field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent,
-                                     args.m)
+                                     args.m, barrier)
                 field3 = FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height,
-                                     stopEvent, args.m)
+                                     stopEvent, args.m, barrier)
                 field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
-                                     stopEvent, args.m)
+                                     stopEvent, args.m, barrier)
 
                 responseTimeStart = time.time()
                 field1.start()
@@ -108,14 +111,20 @@ if __name__ == "__main__":
             field.obstruct()
             print("")
             personList = []
+            if args.d:
+                barrier = threading.Barrier(n + 1)
+            else:
+                barrier = threading.Barrier(n)
             while (n > 0):
-                personList.append(PersonThread(field, args.m))
+                personList.append(PersonThread(field, args.m, barrier))
                 n = n - 1
             if args.d:
                 displayData = DisplayData(field)
-                displayData.start()
             for person in personList:
                 person.start()
+            if args.d:
+                barrier.wait()
+                displayData.start()
             for person in personList:
                 person.join()
             if args.d:
@@ -128,24 +137,31 @@ if __name__ == "__main__":
             print("running")
             field = Field(512, 128)
             field.obstruct()
+            if args.d:
+                barrier = threading.Barrier(5)
+            else:
+                barrier = threading.Barrier(4)
             while n > 0:
                 Person(field)
                 n = n - 1
             stopEvent = threading.Event()
-            field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m)
-            field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent, args.m)
+            field1 = FieldThread(field, 0, 0, int(field.width / 2), int(field.height / 2), stopEvent, args.m, barrier)
+            field2 = FieldThread(field, int(field.width / 2), 0, field.width, int(field.height / 2), stopEvent, args.m,
+                                 barrier)
             field3 = FieldThread(field, 0, int(field.height / 2), int(field.width / 2), field.height,
-                                 stopEvent, args.m)
+                                 stopEvent, args.m, barrier)
             field4 = FieldThread(field, int(field.width / 2), int(field.height / 2), field.width, field.height,
-                                 stopEvent, args.m)
+                                 stopEvent, args.m, barrier)
             if args.d:
                 displayData = DisplayData(field)
-                displayData.start()
             field1.start()
             field2.start()
             field3.start()
             field4.start()
 
+            if args.d:
+                barrier.wait()
+                displayData.start()
             flag = True
             while flag:
                 p = 0

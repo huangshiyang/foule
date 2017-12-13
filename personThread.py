@@ -4,11 +4,13 @@ import math
 import random
 import time
 
+
 class PersonThread(threading.Thread):
-    def __init__(self, field, measure):
+    def __init__(self, field, measure, barrier):
         threading.Thread.__init__(self)
         self.field = field
         self.measure = measure
+        self.barrier = barrier
         while True:
             location = Location(random.randint(0, self.field.getHeight() - 1),
                                 random.randint(0, self.field.getWidth() - 1))
@@ -48,6 +50,7 @@ class PersonThread(threading.Thread):
         self.field.clear(self.location)
 
     def run(self):
+        self.barrier.wait()
         if self.measure:
             self.timeStart = time.clock()
             self.goToDoor()
