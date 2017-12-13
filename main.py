@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     n = pow(2, args.p)
     if args.m:
-        print("I'm mesuring...Please be patient=)")
+        print("Mesuring...Run 5 times. Please be patient.")
         cpuTimeList = [0, 0, 0, 0, 0]
         responseTimeList = [0, 0, 0, 0, 0]
         responseTimeSum = 0
@@ -37,7 +37,7 @@ if __name__ == "__main__":
             if args.t == 0:
                 field = Field(512, 128)
                 field.obstruct()
-                print(".")
+                print("#", index + 1, "run.")
                 personList = []
                 while number > 0:
                     personList.append(PersonThread(field, args.m))
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             elif args.t == 1:
                 field = Field(512, 128)
                 field.obstruct()
-                print(".")
+                print("#", index + 1, "run.")
                 while number > 0:
                     Person(field)
                     number = number - 1
@@ -88,7 +88,11 @@ if __name__ == "__main__":
                 responseTimeEnd = time.time()
 
                 cpuTime = field1.getTimeComsume() + field2.getTimeComsume() + field3.getTimeComsume() + field4.getTimeComsume()
-            responseTimeList[index] = responseTimeEnd - responseTimeStart
+            responseTime = responseTimeEnd - responseTimeStart
+            print("response time :", responseTime, "second(s)")
+            print("CPU time :", cpuTime, "second(s)")
+            print("")
+            responseTimeList[index] = responseTime
             cpuTimeList[index] = cpuTime
             responseTimeSum += responseTimeList[index]
             cpuTimeSum += cpuTimeList[index]
