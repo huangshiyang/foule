@@ -12,8 +12,8 @@ class PersonThread(threading.Thread):
         self.measure = measure
         self.barrier = barrier
         while True:
-            location = Location(random.randint(0, self.field.getHeight() - 1),
-                                random.randint(0, self.field.getWidth() - 1))
+            location = Location(random.randint(0, self.field.height - 1),
+                                random.randint(0, self.field.width - 1))
             if self.field.getLocation(location) == 0:
                 self.field.place(location)
                 self.location = location
