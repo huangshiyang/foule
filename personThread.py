@@ -44,7 +44,6 @@ class PersonThread(threading.Thread):
                     self.field.place(location)
                     self.location = location
                 self.field.release(l)
-            time.sleep(0.001)
         self.field.clear(self.location)
 
     def run(self):
