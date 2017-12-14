@@ -39,12 +39,12 @@ if __name__ == "__main__":
         responseTimeList = [0, 0, 0, 0, 0]
         responseTimeSum = 0
         cpuTimeSum = 0
+        field = Field(512, 128)
+        field.obstruct()
         for index in range(len(responseTimeList)):
             number = n
             cpuTime = 0
             if args.t == 0:
-                field = Field(512, 128)
-                field.obstruct()
                 barrier = threading.Barrier(n)
                 print("#", index + 1, "run.")
                 personList = []
@@ -60,8 +60,6 @@ if __name__ == "__main__":
                 for person in personList:
                     cpuTime += person.getTimeComsume()
             elif args.t == 1:
-                field = Field(512, 128)
-                field.obstruct()
                 barrier = threading.Barrier(4)
                 print("#", index + 1, "run.")
                 while number > 0:
